@@ -39,8 +39,13 @@ angular.module '<%= scriptAppName %>'
       return 2
     return
 
-  $http.get('/api/things').success (awesomeThings) ->
-    $scope.awesomeThings = awesomeThings
+  $http.get('/api/things').then (awesomeThings) ->
+    $scope.awesomeThings = awesomeThings.data
+    return
+  , (err) ->
+    # do something with error
+    # console.log(err);
+    return
     <% if(filters.socketio) { %>
     socket.syncUpdates 'thing', $scope.awesomeThings
    <% } %>

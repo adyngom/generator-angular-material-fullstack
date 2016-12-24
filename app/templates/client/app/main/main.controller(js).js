@@ -4,10 +4,17 @@ angular.module('<%= scriptAppName %>')
   .controller('MainCtrl', function ($scope, $http<% if(filters.socketio) { %>, socket<% } %>) {
     $scope.awesomeThings = [];
 
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;<% if(filters.socketio) { %>
-      socket.syncUpdates('thing', $scope.awesomeThings);<% } %>
-    });
+    $http.get('/api/things').then(
+      // success function
+      function(awesomeThings) {
+        $scope.awesomeThings = awesomeThings.data;<% if(filters.socketio) { %>
+          socket.syncUpdates('thing', $scope.awesomeThings);<% } %>
+      },
+      // catch error
+      function(err) {
+        // do something with error
+        // console.log(err);
+      });
 
     $scope.getColor = function($index) {
       var _d = ($index + 1) % 11;
